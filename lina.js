@@ -4,7 +4,7 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     const target = document.querySelector(link.getAttribute("href"));
     if (target) {
       e.preventDefault();
-      const offset = 70;
+      const offset = 70; // ارتفاع navbar
       const topPos = target.offsetTop - offset;
       window.scrollTo({ top: topPos, behavior: "smooth" });
     }
@@ -30,7 +30,6 @@ const text = {
 // Typing Animation للـ bio
 let i = 0;
 const typingText = document.getElementById("typing-text");
-const aboutSection = document.querySelector(".about-container");
 let started = false;
 
 function type() {
@@ -43,12 +42,30 @@ function type() {
   }
 }
 
-// Desktop: بدء الكتابة عند hover
-aboutSection.addEventListener("mouseenter", () => {
-  if (!started && window.innerWidth > 768) {
+// بدء الكتابة على load لجميع الأجهزة
+window.addEventListener("load", () => {
+  if (!started) {
     started = true;
     type();
   }
 });
 
-// Mobile
+// Profile Image 3D Hover
+const img = document.querySelector('.profile-img');
+img.addEventListener('mousemove', (e) => {
+  const rect = img.getBoundingClientRect();
+  const x = e.clientX - rect.left - rect.width / 2;
+  const y = e.clientY - rect.top - rect.height / 2;
+  img.style.setProperty('--rotateY', `${x / 20}deg`);
+  img.style.setProperty('--rotateX', `${-y / 20}deg`);
+});
+img.addEventListener('mouseleave', () => {
+  img.style.setProperty('--rotateY', '0deg');
+  img.style.setProperty('--rotateX', '0deg');
+});
+
+// عرض المهارات ديناميكياً
+function displaySkills() {
+  const projectParagraph = document.querySelector(".project p");
+  projectParagraph.innerHTML = text.skills.map(skill => `• ${skill}`).join("<br>");
+}
